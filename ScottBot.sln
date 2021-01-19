@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScottBot.Console", "ScottBot.Console\ScottBot.Console.csproj", "{3C59739E-3A4D-42BD-9446-1E53A2D3FE06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScottBot.Models", "ScottBot.Models\ScottBot.Models.csproj", "{C54805E7-286C-4288-9E7A-0D8ED4479467}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C59739E-3A4D-42BD-9446-1E53A2D3FE06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C59739E-3A4D-42BD-9446-1E53A2D3FE06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C59739E-3A4D-42BD-9446-1E53A2D3FE06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C59739E-3A4D-42BD-9446-1E53A2D3FE06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C54805E7-286C-4288-9E7A-0D8ED4479467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C54805E7-286C-4288-9E7A-0D8ED4479467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C54805E7-286C-4288-9E7A-0D8ED4479467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C54805E7-286C-4288-9E7A-0D8ED4479467}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DECCBA86-B8C2-46D0-B3C9-84554642C872}
+	EndGlobalSection
+EndGlobal
