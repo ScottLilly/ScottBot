@@ -9,9 +9,21 @@ It does use [Azure speech-to-text](https://azure.microsoft.com/en-us/services/co
 
 
 ## Preparation
-1. Create a User Secrets file for the WPF project. This will store all the secret keys you want to keep out of source control.
-    1. Add your key and region information
+1. Create a User Secrets file for the WPF project, using the format below. This will store all the secret keys you want to keep out of source control.
+```javascript
+{
+  "Speech": {
+    "Key": "",
+    "Region": ""
+  },
+  "Twitch": {
+    "ChannelName": "",
+    "Token": ""
+  } 
+}
+```
 
-As we add more capacilities to the app, this is where we'll add all other keys
-
-**NOTE:** I'll add the exact format for the JSON soon.
+**NOTES**
+- Speech Key and Region are from your Azure Coginitive service "Keys and Endpoint"
+- ChannelName is your Twitch user/channel name, e.g. "CodingWithScott"
+- For your Twitch token, check https://dev.twitch.tv/docs/authentication and https://twitchapps.com/tmi/
