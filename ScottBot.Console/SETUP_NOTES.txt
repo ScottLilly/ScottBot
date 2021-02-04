@@ -1,0 +1,19 @@
+﻿This program expects the following values in user secrets or appsettings:
+
+{
+  "Speech": {
+    "Key": "",
+    "Region": ""
+  },
+  "Twitch": {
+    "ChannelName": "",
+    "Token": ""
+  } 
+}
+
+
+NOTES
+========================================================================================
+- Speech Key and Region are from your Azure Coginitive service "Keys and Endpoint"
+- ChannelName is your Twitch user/channel name, e.g. "CodingWithScott"
+- For your Twitch token, check https://dev.twitch.tv/docs/authentication and https://twitchapps.com/tmi/
