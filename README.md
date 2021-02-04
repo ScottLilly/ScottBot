@@ -3,13 +3,23 @@ This is a speech-recognition app intended to provide many of the capabilities fo
 
 It does use [Azure speech-to-text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/), which sends whatever your microphone hears to Azure. However, this app does not store any data - as you can see by reviewing the code.
 
+
 ## Requirements
 1. An [Azure](https://azure.microsoft.com) account
 2. An Azure "Cognitive Services" key
 
 
+## Running the program
+Run the console program. It will listen for the bot name (currently "ScottBot", but configurable in the appsettings.json), the word "Twitch", and the matching "ChatCommand" (also configurable in appsettings.json). The program will paste the text into your Twitch chat.
+
+For example, if I say "ScottBot Twitch GitHub", the program will put "My GitHub repos: https://github.com/ScottLilly https://github.com/CodingWithScott" into the Twitch chat for my channel.
+
+
 ## Preparation
 1. Create a User Secrets file for the WPF project, using the format below. This will store all the secret keys you want to keep out of source control.
+2. Change the BotName and Twitch ChatCommands values to whatever values you want to use.
+
+user secrets values to include
 ```javascript
 {
   "Speech": {
