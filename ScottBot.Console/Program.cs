@@ -29,7 +29,8 @@ namespace ScottBot.Console
 
             s_twitchBot = new TwitchBot(s_botSettings.TwitchChannelName, 
                                         s_botSettings.TwitchToken,
-                                        s_botSettings.TwitchChatMessages);
+                                        s_botSettings.TwitchChatMessages,
+                                        s_botSettings.BotName);
             s_twitchBot.Connect();
 
             PhraseListGrammar phraseList = 
@@ -113,7 +114,7 @@ namespace ScottBot.Console
             }
             else if(spokenText.IncludesTheWords("Twitch"))
             {
-                s_twitchBot.SendTwitchChatMessage(spokenText);
+                s_twitchBot.HandleTwitchCommand(spokenText);
             }
         }
 
