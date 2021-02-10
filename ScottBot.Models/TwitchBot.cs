@@ -48,39 +48,41 @@ namespace ScottBot.Models
 
         public void HandleTwitchCommand(string spokenText)
         {
-            if(spokenText.IncludesTheWords("follower", "only", "off") ||
-               spokenText.IncludesTheWords("followers", "only", "off"))
-            {
-                _client.FollowersOnlyOff(_channelName);
-            }
-            else if(spokenText.IncludesTheWords("follower", "only", "on") ||
-               spokenText.IncludesTheWords("followers", "only", "on"))
+            if(spokenText.IncludesTheWords("start", "follower", "only") ||
+               spokenText.IncludesTheWords("start", "followers", "only"))
             {
                 _client.FollowersOnlyOn(_channelName, TEN_MINUTES);
             }
-            else if(spokenText.IncludesTheWords("subs", "only", "off") ||
-                    spokenText.IncludesTheWords("subscriber", "only", "off") ||
-                    spokenText.IncludesTheWords("subscribers", "only", "off"))
+            else if(spokenText.IncludesTheWords("stop", "follower", "only") ||
+                    spokenText.IncludesTheWords("stop", "followers", "only"))
             {
-                _client.SubscribersOnlyOff(_channelName);
+                _client.FollowersOnlyOff(_channelName);
             }
-            else if(spokenText.IncludesTheWords("subs", "only") ||
-                    spokenText.IncludesTheWords("subscriber", "only") ||
-                    spokenText.IncludesTheWords("subscribers", "only"))
+            else if(spokenText.IncludesTheWords("start", "sub", "only") ||
+                    spokenText.IncludesTheWords("start", "subs", "only") ||
+                    spokenText.IncludesTheWords("start", "subscriber", "only") ||
+                    spokenText.IncludesTheWords("start", "subscribers", "only"))
             {
                 _client.SubscribersOnlyOn(_channelName);
             }
-            else if(spokenText.IncludesTheWords("slow", "on"))
+            else if(spokenText.IncludesTheWords("stop", "sub", "only") ||
+                    spokenText.IncludesTheWords("stop", "subs", "only") ||
+                    spokenText.IncludesTheWords("stop", "subscriber", "only") ||
+                    spokenText.IncludesTheWords("stop", "subscribers", "only"))
+            {
+                _client.SubscribersOnlyOff(_channelName);
+            }
+            else if(spokenText.IncludesTheWords("start", "slow", "mode"))
             {
                 _client.SlowModeOn(_channelName, TEN_MINUTES);
             }
-            else if(spokenText.IncludesTheWords("slow", "off"))
+            else if(spokenText.IncludesTheWords("stop", "slow", "mode"))
             {
                 _client.SlowModeOff(_channelName);
             }
             else if(spokenText.IncludesTheWords("clear", "chat"))
             {
-                SendChatMessage(@"/clear");
+                _client.ClearChat(_channelName);
             }
             else
             {
