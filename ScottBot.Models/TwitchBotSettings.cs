@@ -1,24 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ScottBot.Models
 {
-    public class BotSettings
+    public class TwitchBotSettings
     {
         private readonly Dictionary<string, string> _values =
             new Dictionary<string, string>();
 
+        public string ChannelName => _values["Twitch:ChannelName"];
         public string BotName => _values["BotName"];
+        public bool HandleAlerts => Convert.ToBoolean(_values["Twitch:HandleAlerts"] ?? "false");
         public string SpeechKey => _values["Speech:Key"];
         public string SpeechRegion => _values["Speech:Region"];
-        public string TwitchChannelName => _values["Twitch:ChannelName"];
-        public string TwitchToken => _values["Twitch:Token"];
+        public string Token => _values["Twitch:Token"];
 
-        public List<ChatMessage> TwitchChatMessages { get; }
+        public List<ChatMessage> ChatMessages { get; }
 
-        public BotSettings(IEnumerable<KeyValuePair<string, string>> configuration)
+        public TwitchBotSettings(IEnumerable<KeyValuePair<string, string>> configuration)
         {
-            TwitchChatMessages = new List<ChatMessage>();
+            ChatMessages = new List<ChatMessage>();
             
             foreach((string key, string value) in configuration.Where(c => c.Value != null))
             {
@@ -27,7 +29,7 @@ namespace ScottBot.Models
                     int lastColonIndex = key.LastIndexOf(":");
                     string keywords = key.Substring(lastColonIndex + 1);
                     
-                    TwitchChatMessages.Add(new ChatMessage {Keywords = keywords, Message = value});
+                    ChatMessages.Add(new ChatMessage {Keywords = keywords, Message = value});
                 }
                 else
                 {

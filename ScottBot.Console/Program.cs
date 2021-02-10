@@ -10,7 +10,7 @@ namespace ScottBot.Console
 {
     public class Program
     {
-        private static BotSettings s_botSettings;
+        private static TwitchBotSettings s_twitchBotSettings;
 
         private static TwitchBot s_twitchBot;
         
@@ -27,15 +27,13 @@ namespace ScottBot.Console
             
             Initialize();
 
-            s_twitchBot = new TwitchBot(s_botSettings.TwitchChannelName, 
-                                        s_botSettings.TwitchToken,
-                                        s_botSettings.TwitchChatMessages,
-                                        s_botSettings.BotName);
+            s_twitchBot = new TwitchBot(s_twitchBotSettings);
+            
             s_twitchBot.Connect();
 
             PhraseListGrammar phraseList = 
                 PhraseListGrammar.FromRecognizer(s_speechRecognizer);
-            phraseList.AddPhrase(s_botSettings.BotName);
+            phraseList.AddPhrase(s_twitchBotSettings.BotName);
             phraseList.AddPhrase("RPG");
             phraseList.AddPhrase("GitHub");
             phraseList.AddPhrase("Discord");
@@ -66,13 +64,13 @@ namespace ScottBot.Console
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
                         .AddUserSecrets<Program>();
 
-                    s_botSettings = new BotSettings(configuration.Build().AsEnumerable());
+                    s_twitchBotSettings = new TwitchBotSettings(configuration.Build().AsEnumerable());
                 });
         
         private static void Initialize()
         {
             SpeechConfig speechConfig = 
-                SpeechConfig.FromSubscription(s_botSettings.SpeechKey, s_botSettings.SpeechRegion);
+                SpeechConfig.FromSubscription(s_twitchBotSettings.SpeechKey, s_twitchBotSettings.SpeechRegion);
             
             s_audioConfig = AudioConfig.FromDefaultMicrophoneInput();
             s_speechRecognizer = new SpeechRecognizer(speechConfig, s_audioConfig);
@@ -92,22 +90,16 @@ namespace ScottBot.Console
             System.Console.WriteLine($"RECOGNIZED: Text={spokenText}");
 
             // Ignore everything that doesn't include the bot's name
-            if(!spokenText.IncludesTheWords(s_botSettings.BotName))
+            if(!spokenText.IncludesTheWords(s_twitchBotSettings.BotName))
             {
                 return;
             }
 
-            spokenText = spokenText.RemoveText(s_botSettings.BotName);
+            spokenText = spokenText.RemoveText(s_twitchBotSettings.BotName);
             
             // Process the request
-            if(spokenText.IncludesTheWords("start") ||
-               spokenText.IncludesTheWords("wake"))
-            {
-                await SpeakAsync("What can I do for you?");
-            }
-            else if(spokenText.IncludesTheWords("stop") ||
-                    spokenText.IncludesTheWords("sleep") ||
-                    spokenText.IncludesTheWords("shut", "down"))
+            if(spokenText.IncludesTheWords("sleep") ||
+               spokenText.IncludesTheWords("shut", "down"))
             {
                 await SpeakAsync("Shutting down");
                 s_stopRecognition.TrySetCanceled(new CancellationToken(true));

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client;
 using TwitchLib.Client.Enums;
@@ -13,36 +12,37 @@ namespace ScottBot.Models
     public class TwitchBot
     {
         private readonly TimeSpan TEN_MINUTES = new TimeSpan(0, 10, 0);
-        
-        private readonly string _channelName;
-        private readonly List<ChatMessage> _chatMessages;
-        private readonly string _botName;
+
+        private readonly TwitchBotSettings _twitchBotSettings;
+
+        private readonly TwitchClient _client = new TwitchClient();
         private readonly ConnectionCredentials _credentials;
-        private readonly TwitchClient _client;
         
-        public TwitchBot(string channelName, string token, List<ChatMessage> chatMessages, 
-                         string botName = "")
+        public TwitchBot(TwitchBotSettings twitchBotSettings)
         {
-            _channelName = channelName;
-            _chatMessages = chatMessages;
-            _botName = string.IsNullOrWhiteSpace(botName) ? channelName : botName;
+            _twitchBotSettings = twitchBotSettings;
             
-            _credentials = new ConnectionCredentials(botName, token, disableUsernameCheck:true);
-            _client = new TwitchClient();
+            _credentials = 
+                new ConnectionCredentials(string.IsNullOrWhiteSpace(_twitchBotSettings.BotName) ? twitchBotSettings.ChannelName : _twitchBotSettings.BotName, _twitchBotSettings.Token, disableUsernameCheck:true);
             
-            _client.OnMessageReceived += Client_OnChatMessageReceived;
-            _client.OnBeingHosted += Client_OnBeingHosted;
             _client.OnDisconnected += Client_OnDisconnected;
-            _client.OnCommunitySubscription += Client_OnCommunitySubscription;
-            _client.OnGiftedSubscription += Client_OnGiftedSubscription;
-            _client.OnNewSubscriber += Client_OnNewSubscriber;
-            _client.OnRaidNotification += Client_OnRaidNotification;
-            _client.OnReSubscriber += Client_OnReSubscriber;
+
+            _client.OnMessageReceived += Client_OnChatMessageReceived;
+
+            if(_twitchBotSettings.HandleAlerts)
+            {
+                _client.OnBeingHosted += Client_OnBeingHosted;
+                _client.OnCommunitySubscription += Client_OnCommunitySubscription;
+                _client.OnGiftedSubscription += Client_OnGiftedSubscription;
+                _client.OnNewSubscriber += Client_OnNewSubscriber;
+                _client.OnRaidNotification += Client_OnRaidNotification;
+                _client.OnReSubscriber += Client_OnReSubscriber;
+            }
         }
 
         public void Connect()
         {
-            _client.Initialize(_credentials, _channelName);
+            _client.Initialize(_credentials, _twitchBotSettings.ChannelName);
             _client.Connect();
         }
 
@@ -51,38 +51,38 @@ namespace ScottBot.Models
             if(spokenText.IncludesTheWords("start", "follower", "only") ||
                spokenText.IncludesTheWords("start", "followers", "only"))
             {
-                _client.FollowersOnlyOn(_channelName, TEN_MINUTES);
+                _client.FollowersOnlyOn(_twitchBotSettings.ChannelName, TEN_MINUTES);
             }
             else if(spokenText.IncludesTheWords("stop", "follower", "only") ||
                     spokenText.IncludesTheWords("stop", "followers", "only"))
             {
-                _client.FollowersOnlyOff(_channelName);
+                _client.FollowersOnlyOff(_twitchBotSettings.ChannelName);
             }
             else if(spokenText.IncludesTheWords("start", "sub", "only") ||
                     spokenText.IncludesTheWords("start", "subs", "only") ||
                     spokenText.IncludesTheWords("start", "subscriber", "only") ||
                     spokenText.IncludesTheWords("start", "subscribers", "only"))
             {
-                _client.SubscribersOnlyOn(_channelName);
+                _client.SubscribersOnlyOn(_twitchBotSettings.ChannelName);
             }
             else if(spokenText.IncludesTheWords("stop", "sub", "only") ||
                     spokenText.IncludesTheWords("stop", "subs", "only") ||
                     spokenText.IncludesTheWords("stop", "subscriber", "only") ||
                     spokenText.IncludesTheWords("stop", "subscribers", "only"))
             {
-                _client.SubscribersOnlyOff(_channelName);
+                _client.SubscribersOnlyOff(_twitchBotSettings.ChannelName);
             }
             else if(spokenText.IncludesTheWords("start", "slow", "mode"))
             {
-                _client.SlowModeOn(_channelName, TEN_MINUTES);
+                _client.SlowModeOn(_twitchBotSettings.ChannelName, TEN_MINUTES);
             }
             else if(spokenText.IncludesTheWords("stop", "slow", "mode"))
             {
-                _client.SlowModeOff(_channelName);
+                _client.SlowModeOff(_twitchBotSettings.ChannelName);
             }
             else if(spokenText.IncludesTheWords("clear", "chat"))
             {
-                _client.ClearChat(_channelName);
+                _client.ClearChat(_twitchBotSettings.ChannelName);
             }
             else
             {
@@ -98,7 +98,8 @@ namespace ScottBot.Models
         private void HandleCustomCommands(string spokenText)
         {
             foreach(ChatMessage chatMessage in
-                _chatMessages.Where(cm => spokenText.IncludesTheWords(cm.Keywords.Split(" "))))
+                _twitchBotSettings.ChatMessages
+                                  .Where(cm => spokenText.IncludesTheWords(cm.Keywords.Split(" "))))
             {
                 SendChatMessage(chatMessage.Message);
             }
@@ -106,7 +107,7 @@ namespace ScottBot.Models
 
         private void SendChatMessage(string message)
         {
-            _client.SendMessage(_channelName, message);
+            _client.SendMessage(_twitchBotSettings.ChannelName, message);
         }
 
         private void Client_OnBeingHosted(object? sender, OnBeingHostedArgs e)
@@ -131,14 +132,7 @@ namespace ScottBot.Models
 
         private void Client_OnGiftedSubscription(object? sender, OnGiftedSubscriptionArgs e)
         {
-            //if(e.GiftedSubscription.IsAnonymous)
-            //{
-            //    SendChatMessage($"Thanks for gifting a subscription to {e.GiftedSubscription.DisplayName}");
-            //}
-            //else
-            //{
-            //    SendChatMessage($"{e.GiftedSubscription.} Thanks for gifting a subscription to {e.GiftedSubscription.DisplayName}");
-            //}
+            SendChatMessage($"Welcome to the channel {e.GiftedSubscription.DisplayName}!");
         }
 
         private void Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
