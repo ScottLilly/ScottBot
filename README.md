@@ -1,4 +1,13 @@
 # ScottBot
+
+<table>
+  <tbody>
+	<tr>
+	  <td>This project is inactive and has been archived to read-only mode. Please contact me if you want it reopened.</td>
+	</tr>
+  </tbody>
+</table>
+
 This is a speech-recognition app intended to provide many of the capabilities found in commercial apps, without handing over so much of my personal information to the companies that are more-than-willing to abuse it.
 
 It does use [Azure speech-to-text](https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/), which sends whatever your microphone hears to Azure. However, this app does not store any data - as you can see by reviewing the code.
